@@ -1,0 +1,15 @@
+@import "../mixins/div.mixins.scss";
+
+.flexRow {
+  @include flexDefault;
+}
+
+.flexColumn {
+  @include flexDefault;
+  flex-direction: column;
+}
+
+.flexSpaceBet {
+  @include flexDefault;
+  justify-content: space-between;
+}

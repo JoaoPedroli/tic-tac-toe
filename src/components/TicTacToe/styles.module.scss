@@ -1,0 +1,34 @@
+@import "../../sass/components/divs.module.scss";
+
+.container {
+  @extend .flexColumn;
+  min-height: 100vh;
+
+  .subcontainer {
+    @extend .flexRow;
+
+    div {
+      @extend .flexRow;
+
+      width: 10rem;
+      height: 10rem;
+      background: var(--gray1-t);
+      margin: .3rem;
+      box-shadow: .1rem .1rem .6rem var(--gray1);
+      cursor: pointer;
+      transition: all .3s;
+
+      &:hover {
+        box-shadow: .1rem .1rem 1.5rem var(--gray1);
+      }
+      &:active {
+        box-shadow: 0 0 0 var(--gray1);
+      }
+
+      span {
+        font-size: 3rem;
+        font-weight: 300;
+      }
+    }
+  }
+}
