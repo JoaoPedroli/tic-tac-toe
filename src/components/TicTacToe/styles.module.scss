@@ -3,23 +3,22 @@
 .container {
   @extend .flexColumn;
   min-height: 100vh;
-
+  
   .subcontainer {
     @extend .flexRow;
-
+    background: rgb(95, 95, 95);
+    
     div {
       @extend .flexRow;
 
+      background: white;
       width: 10rem;
       height: 10rem;
-      background: var(--gray1-t);
-      margin: .3rem;
-      box-shadow: .1rem .1rem .6rem var(--gray1);
       cursor: pointer;
       transition: all .3s;
 
       &:hover {
-        box-shadow: .1rem .1rem 1.5rem var(--gray1);
+        box-shadow: .1rem .1rem .5rem var(--gray1);
       }
       &:active {
         box-shadow: 0 0 0 var(--gray1);
@@ -30,5 +29,50 @@
         font-weight: 300;
       }
     }
-  }
+
+    &:first-child {
+      border-radius: 1rem 1rem 0 0;
+
+      div{
+        &:first-child {
+          border-top-left-radius: 1rem;
+          margin: 0 .5rem .5rem 0;
+        }
+        &:last-child {
+          border-top-right-radius: 1rem;
+          margin: 0 0 .5rem .5rem;
+        }
+        &:not(:first-child, :last-child) {
+          margin-bottom: .5rem;
+        }
+      }
+    }
+    &:last-child {
+      border-radius: 0 0 1rem 1rem;
+
+      div{
+        &:first-child {
+          border-bottom-left-radius: 1rem;
+          margin: .5rem .5rem 0 0;
+        }
+        &:last-child {
+          border-bottom-right-radius: 1rem;
+          margin: .5rem 0 0 .5rem;
+        }
+        &:not(:first-child, :last-child) {
+          margin-top: .5rem;
+        }
+      }
+    }
+    &:not(:first-child, :last-child) {
+      div {
+        &:first-child {
+          margin-right: .5rem;
+        }
+        &:last-child {
+          margin-left: .5rem;
+        }
+      }
+    }
+  }    
 }
