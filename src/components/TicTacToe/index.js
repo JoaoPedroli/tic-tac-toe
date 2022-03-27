@@ -1,100 +1,108 @@
 import { useState } from "react";
 import styles from "./styles.module.scss";
+import { MdClose, MdOutlineCircle } from "react-icons/md";
 
 export const TicTacToe = () => {
-  const [current, setCurrent] = useState("X");
-  const [grid, setGrid] = useState([
-    ["", "", ""],
-    ["", "", ""],
-    ["", "", ""],
-  ]);
+	const XOption = <MdClose size={30} color="#fff" />;
+	const OOption = <MdOutlineCircle size={30} color="#fff" />;
 
-  const handleChangeGrid = (i, j) => {
-    if (grid[i][j]) return;
+	const [current, setCurrent] = useState(XOption);
+	const [grid, setGrid] = useState([
+		["", "", ""],
+		["", "", ""],
+		["", "", ""],
+	]);
 
-    let newGrid = grid;
-    newGrid[i][j] = current;
-    setCurrent(current === "X" ? "O" : "X");
-    setGrid(newGrid);
-  };
+	const handleChangeGrid = (i, j) => {
+		if (grid[i][j]) return;
 
-  const dfs = (i, j, directionI, directionJ, parent, total) => {
-    if (
-      i < 0 || i === 3 || j < 0 || j === 3 ||
-      !grid[i][j] || parent !== grid[i][j]
-    ) {
-      return;
-    }
-      
-    if (total === 2) {
-      alert("End Game");
-      return;
-    }
+		let newGrid = grid;
+		newGrid[i][j] = current;
+		setCurrent(e =>
+			e.type?.name === XOption.type.name ? OOption : XOption
+		);
+		setGrid(newGrid);
+	};
 
-    if (directionI === -2 && directionJ === -2) {
-      if(i === 1 && j === 1) {
-        caseInMiddle();
-        return;
-      }
-      dfs(i + 1, j, 1, 0, grid[i][j], total + 1);
-      dfs(i - 1, j, -1, 0, grid[i][j], total + 1);
-      dfs(i, j + 1, 0, 1, grid[i][j], total + 1);
-      dfs(i, j - 1, 0, -1, grid[i][j], total + 1);
-      dfs(i + 1, j + 1, 1, 1, grid[i][j], total + 1);
-      dfs(i - 1, j - 1, -1, -1, grid[i][j], total + 1);
-      dfs(i + 1, j - 1, 1, -1, grid[i][j], total + 1);
-      dfs(i - 1, j + 1, -1, 1, grid[i][j], total + 1);
-      return;
-    }
+	const verifyAllGridGroups = () => {
+		let Igroups = [[], [], []];
+		let Jgroups = [[], [], []];
+    
+		assignValuesToIJGroups();
+    
+		const firstDiagonal = [grid[0][0], grid[1][1], grid[2][2]];
+		const secondDiagonal = [grid[2][0], grid[1][1], grid[0][2]];
 
-    dfs(
-      i + directionI,
-      j + directionJ,
-      directionI,
-      directionJ,
-      grid[i][j], total + 1,
-    );
+		const finishHorizontalGroup = verify(Jgroups);
+		const finishVerticalGroup = verify(Igroups);
+		const finishDiagonalGroup = verify([firstDiagonal, secondDiagonal]);
 
-    function caseInMiddle() {
-      if(grid[i+1][j] === parent && grid[i-1][j] === parent) {
-        alert("End Game");
-        return;
-      }
-      if(grid[i][j+1] === parent && grid[i][j-1] === parent) {
-        alert("End Game");
-        return;
-      }
-      if(grid[i+1][j+1] === parent && grid[i-1][j-1] === parent) {
-        alert("End Game");
-        return;
-      }
-      if(grid[i+1][j-1] === parent && grid[i-1][j+1] === parent) {
-        alert("End Game");
-        return;
+		if (
+			finishHorizontalGroup ||
+			finishVerticalGroup ||
+			finishDiagonalGroup
+		) {
+			alert("End Game");
+			return;
+		}
+    
+    function assignValuesToIJGroups() {
+      for (var i = 0; i < 3; ++i) {
+        for (var j = 0; j < 3; ++j) {
+          Igroups[j].push(grid[i][j]);
+          Jgroups[i].push(grid[i][j]);
+        }
       }
     }
-  };
 
-  return (
-    <div className={styles.container}>
-      {grid.map((gridI, i) => {
-        return (
-          <div className={styles.subcontainer}>
-            {gridI.map((gridJ, j) => {
-              return (
-                <div
-                  onClick={() => {
-                    handleChangeGrid(i, j);
-                    dfs(i, j, -2, -2, grid[i][j], 0);
-                  }}
-                >
-                  <span>{gridJ}</span>
-                </div>
-              );
-            })}
-          </div>
-        );
-      })}
-    </div>
-  );
+		function verify(group = Array < Array(3) > 3) {
+			console.log(Igroups, Jgroups);
+
+			let ok;
+			group.map((v, i) => {
+				if (ok) return;
+				ok = true;
+				v.map((vv, j) => {
+					if (j == 2) return;
+					if (!vv || !group[i][j + 1]) {
+						ok = false;
+						return;
+					}
+
+					if (vv.type.name === group[i][j + 1].type.name) {
+						ok = ok;
+					} else {
+						ok = false;
+						return;
+					}
+				});
+			});
+
+			return ok;
+		}
+	};
+
+	return (
+		<div className={styles.container}>
+			{grid.map((gridI, i) => {
+				return (
+					<div key={i} className={styles.subcontainer}>
+						{gridI.map((gridJ, j) => {
+							return (
+								<div
+									key={j}
+									onClick={() => {
+										handleChangeGrid(i, j);
+										verifyAllGridGroups();
+									}}
+								>
+									<span>{gridJ}</span>
+								</div>
+							);
+						})}
+					</div>
+				);
+			})}
+		</div>
+	);
 };

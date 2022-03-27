@@ -1,4 +1,4 @@
-@import "../../sass/components/divs.module.scss";
+@import "../../styles/components/divs.module.scss";
 
 .container {
   @extend .flexColumn;
@@ -18,10 +18,10 @@
       transition: all .3s;
 
       &:hover {
-        box-shadow: .1rem .1rem .5rem var(--gray1);
+        box-shadow: 0 0 1rem var(--gray1);
       }
       &:active {
-        box-shadow: 0 0 0 var(--gray1);
+        box-shadow: none;
       }
 
       span {
